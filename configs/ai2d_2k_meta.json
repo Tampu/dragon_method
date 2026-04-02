@@ -1,0 +1,8 @@
+{
+  "ai2d_grounding": {
+    "root": "ai2d_samples",
+    "annotation": "ai2d_samples/ai2d_internvl_grounding_train80_v2b.jsonl",
+    "data_augment": true,
+    "repeat_time": 1
+  }
+}
