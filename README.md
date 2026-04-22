@@ -1,12 +1,8 @@
 # diagram_attribution
 
-# AI2D SFT and GRPO in This Repo
-
-This note explains how the AI2D grounding pipeline works in this repo, using the actual scripts, configs, and saved outputs that were used.
+# SFT and GRPO in This Repo
 
 ## Goal
-
-The task here is not answer prediction directly.
 
 The task is:
 
@@ -225,17 +221,6 @@ Saved in:
 
 - [ai2d_eval_metrics_sft.json](/mnt/data2/traviku2/outputs/ai2d_eval_metrics_sft.json)
 
-That eval gave:
-
-- mean IoU: `0.0`
-- recall@0.5: `0.0`
-- precision@0.5: `0.0`
-- avg predicted boxes: `0.0`
-
-So the specific SFT checkpoint later used for GRPO was not producing useful heldout grounding outputs at that evaluation point.
-
-There are also later exploratory SFT eval files on other checkpoints:
-
 - [heldout_metrics_fast100.json](/mnt/data2/traviku2/outputs/ai2d_2k_fast_sft_ep100_lr3e-5_gpu7/heldout_metrics_fast100.json)
 - [heldout_metrics_quality100.json](/mnt/data2/traviku2/outputs/ai2d_2k_fast_sft_ep10_lr3e-5_gpu0/heldout_metrics_quality100.json)
 
@@ -255,23 +240,15 @@ So the best way to read SFT here is:
 
 ### What GRPO was trying to do
 
-GRPO was meant to refine the SFT model by rewarding better box outputs directly, instead of imitating gold outputs token-by-token.
+GRPO - to refine the SFT model by rewarding better box outputs directly, instead of imitating gold outputs token-by-token.
 
 The model starts from the SFT checkpoint, samples multiple candidate box outputs per prompt, scores them with a reward function, and then updates itself to prefer the better ones.
 
 ### Did GRPO start from the finetuned model?
 
-Yes.
-
-The launcher [train_internvl3_dragon_grpo.py](/mnt/data2/traviku2/scripts/train_internvl3_dragon_grpo.py) takes:
-
-- `--model-path`
-
-and in your run this pointed to the SFT checkpoint:
-
 - [ckpts_lr3e-5_ep5_20260312_021631](/mnt/data2/traviku2/outputs/ai2d_2k_fast_sft/ckpts_lr3e-5_ep5_20260312_021631)
 
-So GRPO was not starting from base InternVL. It started from the SFT-finetuned model.
+So GRPO started from the SFT-finetuned model.
 
 ### GRPO data preparation
 
